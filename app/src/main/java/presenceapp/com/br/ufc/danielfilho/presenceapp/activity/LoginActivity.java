@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import java.util.ArrayList;
-
 import connection.Response;
 import connection.ServerRequest;
 import constants.Constants;
@@ -38,24 +36,20 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        this.serverRequest = new ServerRequest(this, this);
+        this.role = new Role();
+        this.user = new User();
+
+
         this.preferences = AppPreferences.getInstance(this);
 
         //Checking if the user is logged
-        if(!preferences.getBoolean(Constants.USER_KEEP_LOGGED)){
+        if(preferences.getBoolean(Constants.USER_KEEP_LOGGED)){
             callMainActivity();
         }else {
-
             this.tv_username = (TextView) findViewById(R.id.et_username);
             this.tv_pass = (TextView) findViewById(R.id.et_pass);
             this.checkBoxKeepLogged = (CheckBox) findViewById(R.id.cb_keepme_logged);
-
-
-            this.serverRequest = new ServerRequest(this, this);
-            this.role = new Role();
-            this.user = new User();
-
-            //getting the trainee role
-            this.serverRequest.get(ServerRequest.GET_ROLES, null);
         }
     }
 
@@ -65,10 +59,15 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
         startActivity(intent);
     }
 
+    public void createAccount(View v){
+        Intent intent = new Intent(this, CreateAccountActivity.class);
+        startActivity(intent);
+    }
 
     public void checkLogin(View v){
         String username = tv_username.getText().toString();
         String pass = tv_pass.getText().toString();
+        role.setType("TRAINEE");
         user.setRole(role);
         user.setUsername(username);
 
@@ -82,32 +81,21 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
 
     @Override
     public void onSuccess(Response res, String requestUrl) {
-        Log.i("LOG", requestUrl);
-        if(requestUrl == ServerRequest.GET_ROLES){
-            if(res.getResult()){
-                ArrayList<LinkedTreeMap<String, Object>> roles = (ArrayList<LinkedTreeMap<String, Object>>) res.getData();
-                for(LinkedTreeMap<String, Object> r : roles){
-                    if(r.get("type").toString().equals("TRAINEE")) {
-                        role.set_id(r.get("_id").toString());
-                        role.setName(r.get("name").toString());
-                        role.setType(r.get("type").toString());
-                    }
-                }
-            }else{
-                //TODO GET ROLES ERROR
-            }
-        }else if(requestUrl == ServerRequest.LOGIN){
+        if(requestUrl == ServerRequest.LOGIN){
             if(res.getResult()){
                 Log.i("LOG", res.getData().toString());
                 LinkedTreeMap<String, Object> r = (LinkedTreeMap<String, Object>) res.getData();
 
-                user.set_id(r.get("_id").toString());
+                role.setType("TRAINEE");
+
+                user.setId(r.get("_id").toString());
                 user.setName(r.get("name").toString());
+                user.setRole(role);
 
                 Toast.makeText(this, "Seja Bem Vindo!", Toast.LENGTH_LONG).show();
                 callMainActivity();
 
-                preferences.putString(Constants.USER_ID_KEY, user.get_id());
+                preferences.putString(Constants.USER_ID_KEY, user.getId());
                 preferences.putString(Constants.USER_NAME, user.getName());
 
                 //Checking if the users check the "Keep me connected"

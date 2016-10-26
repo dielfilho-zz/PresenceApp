@@ -22,6 +22,8 @@ public class ServerRequest {
     public static final String LOGIN = "login";
     public static final String GET_ROLES = "roles";
     public static final String GET_TRAINEE_TEAMS = "team/trainee/";
+    public static final String CREATE_ACCOUNT = "trainee";
+
 
     private OptimusHTTP client;
     private ServerResponseListener listener;
@@ -44,7 +46,6 @@ public class ServerRequest {
             ArrayMap<String, String> params = new ArrayMap<String, String>();
 
             this.client.setContentType(OptimusHTTP.CONTENT_TYPE_JSON);
-            Log.i("LOG", "POST CONTENT TYPE: "+this.client.getContentType());
             String jsonParam = gson.toJson(param);
             Log.i("LOG", "POST PARAMS: "+jsonParam);
             params.put("", jsonParam);

@@ -38,6 +38,12 @@ public class AppPreferences {
         editor.commit();
     }
 
+    public void deleteAllData(){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
     public String getString(String key){
         return preferences.getString(key, "");
     }

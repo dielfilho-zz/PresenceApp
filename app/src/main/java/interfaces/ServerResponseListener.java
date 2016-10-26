@@ -3,7 +3,7 @@ package interfaces;
 import connection.Response;
 
 /**
- * Created by whoami on 9/23/16.
+ * Created by Daniel Filho on 9/23/16.
  */
 
 public interface ServerResponseListener {

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 24
@@ -35,6 +36,6 @@ dependencies {
     compile 'danielfilho.ufc.br.com:predetect:0.1.0'
     compile "com.github.kevinsawicki:http-request:6.0"
     compile 'com.google.code.gson:gson:2.4'
-//    compile 'com.github.nisrulz:optimushttp:1.2.0'
     compile 'com.android.support:cardview-v7:24.2.1'
+
 }

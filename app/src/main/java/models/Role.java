@@ -1,20 +1,20 @@
 package models;
 
 /**
- * Created by whoami on 9/23/16.
+ * Created by Daniel Filho on 9/23/16.
  */
 
 public class Role {
-    private String _id;
+    private String id;
     private String name;
     private String type;
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -36,7 +36,7 @@ public class Role {
     @Override
     public String toString() {
         return "Role{" +
-                "_id='" + _id + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 '}';

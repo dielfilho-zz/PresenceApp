@@ -18,7 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity"></activity>
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.CreateAccountActivity" />
+        <activity android:name=".activity.TeamDetailsActivity"></activity>
+
+        <receiver android:name="presence.PresenceReceiver">
+            <intent-filter>
+                <action android:name="danielfilho.ufc.br.com.predetect.OBSERVING_ENDS"></action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

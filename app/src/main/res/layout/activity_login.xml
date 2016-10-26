@@ -46,6 +46,7 @@
         android:layout_alignEnd="@+id/et_pass"
         android:layout_alignLeft="@+id/et_pass"
         android:layout_alignStart="@+id/et_pass"
+        android:background="@color/colorPrimary"
         android:elevation="5dp" />
 
     <Button
@@ -58,6 +59,7 @@
         android:id="@+id/bt_create_account"
         android:layout_alignRight="@+id/bt_enter"
         android:layout_alignEnd="@+id/bt_enter"
+        android:onClick="createAccount"
         android:elevation="0dp" />
 
     <CheckBox

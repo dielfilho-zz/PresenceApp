@@ -1,32 +1,30 @@
 package models;
 
-import java.util.List;
-
 /**
  * Created by Daniel Filho on 9/23/16.
  */
 
 public class User {
 
-    private String _id;
+    private String id;
     private Role role;
     private String pass;
     private String username;
     private String email;
-    private List<String> phoneMacs;
+    private String phoneMacs;
     private String name;
 
-    public User(String _id, Role role, String pass, String username, String email) {
-        this._id = _id;
+    public User(String id, Role role, String pass, String username, String email) {
+        this.id = id;
         this.role = role;
         this.pass = pass;
         this.username = username;
         this.email = email;
     }
 
-    public User(String name, String _id, Role role, String pass, String username, String email, List<String> phoneMacs) {
+    public User(String name, String id, Role role, String pass, String username, String email, String phoneMacs) {
         this.name = name;
-        this._id = _id;
+        this.id = id;
         this.role = role;
         this.pass = pass;
         this.username = username;
@@ -44,20 +42,20 @@ public class User {
         this.name = name;
     }
 
-    public List<String> getPhoneMacs() {
+    public String getPhoneMac() {
         return phoneMacs;
     }
 
-    public void setPhoneMacs(List<String> phoneMacs) {
+    public void setPhoneMac(String phoneMac) {
         this.phoneMacs = phoneMacs;
     }
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Role getRole() {

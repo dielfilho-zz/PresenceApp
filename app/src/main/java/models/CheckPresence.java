@@ -1,13 +1,26 @@
 package models;
 
+import io.realm.RealmList;
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+
 /**
  * Created by Daniel Filho on 9/30/16.
  */
 
-public class CheckPresence {
+public class CheckPresence extends RealmObject {
 
     private String timeInit;
     private int duration;
+    private boolean scheduled;
+
+    public boolean isScheduled() {
+        return scheduled;
+    }
+
+    public void setScheduled(boolean scheduled) {
+        this.scheduled = scheduled;
+    }
 
     public String getTimeInit() {
         return timeInit;

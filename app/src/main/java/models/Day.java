@@ -2,23 +2,28 @@ package models;
 
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Daniel Filho on 9/30/16.
  */
-public class Day {
+public class Day extends RealmObject{
 
+    @PrimaryKey
     private String id;
     private String timeInit;
     private String timeEnd;
     private String name;
     private int idDay;
-    private List<CheckPresence> checkPresenceList;
+    private RealmList<CheckPresence> checkPresenceList;
 
-    public List<CheckPresence> getCheckPresenceList() {
+    public RealmList<CheckPresence> getCheckPresenceList() {
         return checkPresenceList;
     }
 
-    public void setCheckPresenceList(List<CheckPresence> checkPresenceList) {
+    public void setCheckPresenceList(RealmList<CheckPresence> checkPresenceList) {
         this.checkPresenceList = checkPresenceList;
     }
 
