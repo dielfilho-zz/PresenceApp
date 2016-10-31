@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
                         t.setDistance(Double.parseDouble(mp.get("distance").toString()));
                         t.setPercent(Double.parseDouble(mp.get("percent").toString()));
 
-                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
                         Date init = format.parse(mp.get("date_init").toString());
                         Date end = format.parse(mp.get("date_end").toString());
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
 
                             NumberFormat numberFormat = NumberFormat.getNumberInstance();
                             numberFormat.setParseIntegerOnly(true);
-                            day.setIdDay(numberFormat.parse(date.get("id").toString()).intValue());
+                            day.setIdDay(numberFormat.parse(date.get("id").toString().charAt(0)+"").intValue());
 
                             List<LinkedTreeMap<String, Object>> checks = (List<LinkedTreeMap<String, Object>>) d.get("check_presence");
 
@@ -174,7 +174,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
 
                     }
                 }catch (Exception e){
-                    Log.e("LOG", e.toString());
+                    e.printStackTrace();
+                    Log.e("LOG", "LOL--> "+e.toString());
                 }
                 Log.i("LOG", teamList.toString());
             }else{

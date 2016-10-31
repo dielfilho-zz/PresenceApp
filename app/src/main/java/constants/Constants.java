@@ -18,4 +18,8 @@ public class Constants {
     public static String CHECK_PRESENCE_DURATION = "CHECK_PRESENCE_DURATION_KEY";
     public static String BUNDLE_CHECK_PRESENCE = "BUNDLE_CHECK_PRESENCE";
 
+
+    public static String INTENT_PRESENCE_ID_TRAINEE = "TRAINEE._ID";
+    public static String INTENT_PRESENCE_ID_TEAM = "TEAM._ID";
+
 }

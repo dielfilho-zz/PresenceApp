@@ -18,6 +18,7 @@ import constants.Constants;
 import danielfilho.ufc.br.com.predetect.constants.PredectConstants;
 import danielfilho.ufc.br.com.predetect.datas.WiFiBundle;
 import danielfilho.ufc.br.com.predetect.datas.WiFiData;
+import danielfilho.ufc.br.com.predetect.services.NetworkObserverService;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -43,9 +44,6 @@ public class PresenceManager {
     public void schedulePresences(){
         realm.beginTransaction();
         RealmResults<Team> teams = realm.where(Team.class).findAll();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
 
         Calendar tempCalendar = Calendar.getInstance();
         tempCalendar.setTimeInMillis(System.currentTimeMillis());
@@ -74,9 +72,16 @@ public class PresenceManager {
                             tempCalendar.set(Calendar.HOUR, calendarHours.get(Calendar.HOUR));
                             tempCalendar.set(Calendar.MINUTE, calendarHours.get(Calendar.MINUTE));
 
-                            Log.d("LOG","DATE CHECKPRESENCE ---------------: "+format1.format(tempCalendar.getTime()));
+                            //Checking if the alarm is late
+                            long diff = Calendar.getInstance().getTimeInMillis() - tempCalendar.getTimeInMillis();
 
-                            Intent intent = new Intent(PredectConstants.ACTION_SERVICE);
+                            if(diff > 0){
+                                tempCalendar.add(Calendar.DATE, 7);
+                            }
+
+                            Log.d("LOG","DATE CHECK PRESENCE ---------------: "+format1.format(tempCalendar.getTime()));
+
+                            Intent intent = new Intent(context, NetworkObserverService.class);
                             Bundle bundle = new Bundle();
 
                             List<String> wiFiDatas = new ArrayList<>();

@@ -23,6 +23,7 @@ public class ServerRequest {
     public static final String GET_ROLES = "roles";
     public static final String GET_TRAINEE_TEAMS = "team/trainee/";
     public static final String CREATE_ACCOUNT = "trainee";
+    public static final String PRESENCE_TRAINEE = "trainee/presence/device";
 
 
     private OptimusHTTP client;

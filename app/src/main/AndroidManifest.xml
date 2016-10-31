@@ -28,6 +28,9 @@
             </intent-filter>
         </receiver>
 
+        <service android:name="services.SendPresenceService" android:enabled="true" android:exported="true">
+        </service>
+
     </application>
 
 </manifest>

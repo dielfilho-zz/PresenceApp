@@ -35,7 +35,7 @@ public class CheckPresence extends RealmObject {
     }
 
     public void setDuration(int duration) {
-        this.duration = duration;
+        this.duration = duration * 1000 * 60;
     }
 
     @Override
