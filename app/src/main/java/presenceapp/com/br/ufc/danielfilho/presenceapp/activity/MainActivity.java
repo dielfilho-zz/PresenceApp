@@ -36,6 +36,7 @@ import presenceapp.com.br.ufc.danielfilho.presenceapp.R;
 import util.AppPreferences;
 import util.ListTeamsAdapter;
 import presence.PresenceManager;
+import util.ToastUiThread;
 
 public class MainActivity extends AppCompatActivity implements ServerResponseListener{
 
@@ -50,10 +51,14 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
 
     private TextView tvStatusTeams;
 
+    private ToastUiThread toastUiThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.toastUiThread = new ToastUiThread(this);
 
         this.request = new ServerRequest(this, this);
         preferences = AppPreferences.getInstance(this);
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
         getTraineeTeams();
 
         this.presenceManager = new PresenceManager(this);
+
 
 
         Realm.init(this);
@@ -96,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
             case R.id.item_logout:
                 preferences.deleteAllData();
                 Intent intent = new Intent(this, LoginActivity.class);
+                presenceManager.cancelChecks();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
             default:
@@ -170,12 +178,14 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
                         realm.copyToRealmOrUpdate(teamList);
                         realm.commitTransaction();
 
+
+                        presenceManager.cancelChecks();
                         presenceManager.schedulePresences();
 
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("LOG", "LOL--> "+e.toString());
+                    Log.e("LOG", "Error--> "+e.toString());
                 }
                 Log.i("LOG", teamList.toString());
             }else{
@@ -186,6 +196,6 @@ public class MainActivity extends AppCompatActivity implements ServerResponseLis
 
     @Override
     public void onFailure(Response response, String requestUrl) {
-
+        toastUiThread.showToastOnUi("Ops, Não foi possível atualizar as suas turmas.", Toast.LENGTH_LONG);
     }
 }

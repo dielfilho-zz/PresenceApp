@@ -18,12 +18,14 @@ import constants.Constants;
 import danielfilho.ufc.br.com.predetect.constants.PredectConstants;
 import danielfilho.ufc.br.com.predetect.datas.WiFiBundle;
 import danielfilho.ufc.br.com.predetect.datas.WiFiData;
+import danielfilho.ufc.br.com.predetect.managers.NetworkManager;
 import danielfilho.ufc.br.com.predetect.services.NetworkObserverService;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import models.CheckPresence;
 import models.Day;
+import models.PresencePendingIntent;
 import models.Team;
 
 /**
@@ -34,11 +36,13 @@ public class PresenceManager {
 
     private Context context;
     private Realm realm;
+    private NetworkManager networkManager;
 
     public PresenceManager(Context context){
         this.context = context;
         Realm.init(context);
         this.realm = Realm.getDefaultInstance();
+        this.networkManager = NetworkManager.getInstance();
     }
 
     public void schedulePresences(){
@@ -82,14 +86,13 @@ public class PresenceManager {
                             Log.d("LOG","DATE CHECK PRESENCE ---------------: "+format1.format(tempCalendar.getTime()));
 
                             Intent intent = new Intent(context, NetworkObserverService.class);
-                            Bundle bundle = new Bundle();
 
                             List<String> wiFiDatas = new ArrayList<>();
                             wiFiDatas.add(team.getMacAP());
 
-                            WiFiBundle wiFiBundle = new WiFiBundle(wiFiDatas, cp.getDuration(), team.getDistance());
+                            Log.d("LOG", "DATAS: -------------------> "+wiFiDatas.size());
 
-                            intent.putExtra(PredectConstants.WIFI_BUNDLE, wiFiBundle);
+                            intent.putExtra(PredectConstants.WIFI_BUNDLE, networkManager.createWiFiBundle(wiFiDatas, cp.getDuration(), team.getDistance()));
 
                             scheduleCheck(this.context, intent, tempCalendar.getTimeInMillis());
                         } catch (ParseException e) {
@@ -103,13 +106,35 @@ public class PresenceManager {
         }
 
         realm.commitTransaction();
+        realm.close();
     }
 
 
-    public void scheduleCheck(Context context, Intent intent, long timeInMillis){
-        int idItent = (int) timeInMillis;
-        PendingIntent pendingIntent = PendingIntent.getService(context, idItent, intent, 0);
+    public void cancelChecks(){
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        realm.beginTransaction();
+        RealmResults<PresencePendingIntent> listPendings = realm.where(PresencePendingIntent.class).findAll();
+        Intent intent = new Intent(context, NetworkObserverService.class);
+        for(PresencePendingIntent presenceIntent : listPendings){
+            PendingIntent pendingIntent = PendingIntent.getService(context, (int) presenceIntent.getId(), intent, 0);
+            alarmManager.cancel(pendingIntent);
+            Log.d("LOG", "CANCELLING ALL ALARMS CHECKS.....");
+        }
+        listPendings.deleteAllFromRealm();
+        realm.commitTransaction();
+    }
 
+    public void scheduleCheck(Context context, Intent intent, long timeInMillis){
+
+        Number number = realm.where(PresencePendingIntent.class).max("id");
+        long currentId = number != null ? number.longValue() : 0;
+        int nextId = (int) (currentId+1);
+        PresencePendingIntent presencePendingIntent = new PresencePendingIntent();
+        presencePendingIntent.setId(nextId);
+
+        realm.copyToRealm(presencePendingIntent);
+
+        PendingIntent pendingIntent = PendingIntent.getService(context, nextId, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Log.d("LOG", "Setting the alarm");

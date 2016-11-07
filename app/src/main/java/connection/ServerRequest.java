@@ -18,7 +18,8 @@ import interfaces.ServerResponseListener;
 
 public class ServerRequest {
 
-    private static final String SERVER = "http://192.168.1.18:3000/";
+//    private static final String SERVER = "http://192.168.0.104:8080/";
+    private static final String SERVER = "https://presenceapi.herokuapp.com/";
     public static final String LOGIN = "login";
     public static final String GET_ROLES = "roles";
     public static final String GET_TRAINEE_TEAMS = "team/trainee/";

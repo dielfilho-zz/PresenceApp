@@ -55,6 +55,7 @@ public class SendPresenceService extends Service implements Runnable{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e("PRESENCE LOG", "----------------- SEND PRESENCE SERVICE STARTED ----------------");
+
         wiFiBundle = intent.getBundleExtra(PredectConstants.WIFI_BUNDLE);
         if(wiFiBundle != null){
 
@@ -77,6 +78,7 @@ public class SendPresenceService extends Service implements Runnable{
         List<WiFiData> wiFiDataList = wiFiBundle.getParcelableArrayList(PredectConstants.WIFI_SCANNED);
         Log.d("LOG", "SEND PRECENSE SERVICE LIST: "+wiFiDataList.size());
         realm.beginTransaction();
+
         for(WiFiData wifi : wiFiDataList){
             RealmResults<Team> teams = realm.where(Team.class).equalTo("macAP", wifi.getMAC()).findAll();
 
@@ -95,22 +97,26 @@ public class SendPresenceService extends Service implements Runnable{
 
         @Override
         public void onSuccess(Response response, String requestUrl) {
-            Log.d("LOG", "SUCCESS SEND PRESENCE ----> "+response.getData().toString());
-            String message = "Ops, Não foi possível marcar a sua presença!";
+            Log.d("LOG", "SUCCESS SEND PRESENCE ----> "+requestUrl);
+            String message = "";
             if(requestUrl.equals(ServerRequest.PRESENCE_TRAINEE)){
                 if(response.getResult()){
                     LinkedTreeMap<String, Object> json = (LinkedTreeMap<String, Object>) response.getData();
                     Presence presence = new Presence();
-                    presence.setDate((Date)json.get("date"));
                     presence.setValid((Boolean)json.get("valid"));
+                    presence.setLastCheck((Boolean)json.get("lastCheck"));
+                    presence.setChecks(Integer.parseInt(json.get("checks").toString().charAt(0)+""));
 
-//                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm:ss.SSS'Z'");
-
-                    if(presence.isValid()){
+                    if(presence.isLastCheck() && presence.isValid()){
                         message = "Sua presença foi confirmada!";
-                        NotificationCreator.create(SendPresenceService.this.getApplicationContext(), message, R.drawable.check);
+                    }else if(presence.isLastCheck() && !presence.isValid()){
+                        message = "Sua média de presença não atingiu o mínimo especificado para a turma!";
+                    }else if(presence.isLastCheck() && response.getData() == null){
+                        message = "Ops, Não foi possível confirmar a sua presença!";
+                    }else if(!presence.isLastCheck()){
+                        message = presence.getChecks()+"º checagem de presença concluída!";
                     }
-
+                    NotificationCreator.create(SendPresenceService.this, message, R.drawable.wifilogo);
                 }
             }else{
                 Log.d("LOG", "URL ----> "+requestUrl);
@@ -118,9 +124,9 @@ public class SendPresenceService extends Service implements Runnable{
         }
         @Override
         public void onFailure(Response response, String requestUrl) {
-            Log.d("LOG", "ERRO SEND PRESENCE ----> "+response.getData().toString());
+            Log.d("LOG", "ERRO SEND PRESENCE ----> "+response.getData());
             String message = "Ops, Não foi possível marcar a sua presença!";
-            NotificationCreator.create(SendPresenceService.this.getApplicationContext(), message, R.drawable.check);
+            NotificationCreator.create(SendPresenceService.this.getApplicationContext(), message, R.drawable.wifilogo);
         }
 
     }

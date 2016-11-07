@@ -15,6 +15,15 @@ public class Presence {
     private int checks;
     private List<Integer> percents;
     private Date date;
+    private boolean lastCheck;
+
+    public boolean isLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(boolean lastCheck) {
+        this.lastCheck = lastCheck;
+    }
 
     public List<Integer> getPercents() {
         return percents;

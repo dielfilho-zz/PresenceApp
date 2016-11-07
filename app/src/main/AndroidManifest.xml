@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -20,17 +21,20 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.CreateAccountActivity" />
-        <activity android:name=".activity.TeamDetailsActivity"></activity>
+        <activity android:name=".activity.TeamDetailsActivity" />
 
         <receiver android:name="presence.PresenceReceiver">
             <intent-filter>
-                <action android:name="danielfilho.ufc.br.com.predetect.OBSERVING_ENDS"></action>
+                <action android:name="danielfilho.ufc.br.com.predetect.OBSERVING_ENDS" />
             </intent-filter>
         </receiver>
 
-        <service android:name="services.SendPresenceService" android:enabled="true" android:exported="true">
-        </service>
+        <service
+            android:name="services.SendPresenceService"
+            android:enabled="true"
+            android:exported="true"></service>
 
+        <activity android:name=".activity.PresenceDetails"></activity>
     </application>
 
 </manifest>

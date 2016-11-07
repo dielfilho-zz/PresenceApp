@@ -1,7 +1,10 @@
 package presenceapp.com.br.ufc.danielfilho.presenceapp.activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -18,13 +21,17 @@ import models.Role;
 import models.User;
 import presenceapp.com.br.ufc.danielfilho.presenceapp.R;
 import util.AppPreferences;
+import util.NotificationCreator;
+import util.ToastUiThread;
 
 public class LoginActivity extends AppCompatActivity implements ServerResponseListener {
 
     private ServerRequest serverRequest;
     private TextView tv_username;
     private TextView tv_pass;
-    private CheckBox checkBoxKeepLogged;
+
+
+    private ToastUiThread toastUiThread;
 
     private AppPreferences preferences;
 
@@ -35,7 +42,6 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         this.serverRequest = new ServerRequest(this, this);
         this.role = new Role();
         this.user = new User();
@@ -49,7 +55,8 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
         }else {
             this.tv_username = (TextView) findViewById(R.id.et_username);
             this.tv_pass = (TextView) findViewById(R.id.et_pass);
-            this.checkBoxKeepLogged = (CheckBox) findViewById(R.id.cb_keepme_logged);
+
+            this.toastUiThread = new ToastUiThread(this);
         }
     }
 
@@ -99,9 +106,9 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
                 preferences.putString(Constants.USER_NAME, user.getName());
 
                 //Checking if the users check the "Keep me connected"
-                if(checkBoxKeepLogged.isChecked()){
-                    preferences.putBoolean(Constants.USER_KEEP_LOGGED, true);
-                }
+
+                preferences.putBoolean(Constants.USER_KEEP_LOGGED, true);
+
 
             }else{
                 Toast.makeText(this, "Usuário e/ou Senha Inválidos", Toast.LENGTH_LONG).show();
@@ -111,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
 
     @Override
     public void onFailure(Response ob, String requestUrl) {
-        Log.i("LOG", "------------------------>"+ob.getResult());
+        Log.d("LOG", "------------------------>"+ob.getResult());
+        toastUiThread.showToastOnUi("Ops, não foi possível efetuar o login.", Toast.LENGTH_LONG);
     }
 }

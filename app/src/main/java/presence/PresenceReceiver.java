@@ -21,7 +21,6 @@ public class PresenceReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("LOG", "PRESENCE RECEIVER -------------");
         Bundle bundle = intent.getBundleExtra(PredectConstants.BUNDLE_FINISH_OBSERVING);
         if(bundle != null){
             Log.d("LOG", "TRYING TO START THE SERVICE.....");
