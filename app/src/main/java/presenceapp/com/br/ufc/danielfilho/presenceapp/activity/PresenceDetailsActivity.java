@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import presenceapp.com.br.ufc.danielfilho.presenceapp.R;
 
-public class PresenceDetails extends AppCompatActivity {
+public class PresenceDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

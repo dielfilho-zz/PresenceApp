@@ -24,6 +24,8 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import models.Presence;
 import models.Team;
+import presence.PresenceReceiver;
+import presence.StartObservingReceiver;
 import presenceapp.com.br.ufc.danielfilho.presenceapp.R;
 import util.AppPreferences;
 import util.NotificationCreator;
@@ -40,6 +42,7 @@ public class SendPresenceService extends Service implements Runnable{
     private AppPreferences preferences;
     private ServerRequest request;
     private PresenceResponseListener presenceResponseListener;
+    private Intent myIntent;
 
     @Nullable
     @Override
@@ -54,7 +57,9 @@ public class SendPresenceService extends Service implements Runnable{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("PRESENCE LOG", "----------------- SEND PRESENCE SERVICE STARTED ----------------");
+        Log.d("PRESENCE LOG", "----------------- SEND PRESENCE SERVICE STARTED ----------------");
+
+        this.myIntent = intent;
 
         wiFiBundle = intent.getBundleExtra(PredectConstants.WIFI_BUNDLE);
         if(wiFiBundle != null){
@@ -90,7 +95,11 @@ public class SendPresenceService extends Service implements Runnable{
 
         }
         realm.commitTransaction();
+    }
 
+    private void releaseCPULock(){
+        StartObservingReceiver.completeWakefulIntent(myIntent);
+        PresenceReceiver.completeWakefulIntent(myIntent);
     }
 
     class PresenceResponseListener implements ServerResponseListener{
@@ -121,12 +130,14 @@ public class SendPresenceService extends Service implements Runnable{
             }else{
                 Log.d("LOG", "URL ----> "+requestUrl);
             }
+            releaseCPULock();
         }
         @Override
         public void onFailure(Response response, String requestUrl) {
             Log.d("LOG", "ERRO SEND PRESENCE ----> "+response.getData());
             String message = "Ops, Não foi possível marcar a sua presença!";
             NotificationCreator.create(SendPresenceService.this.getApplicationContext(), message, R.drawable.wifilogo);
+            releaseCPULock();
         }
 
     }

@@ -13,6 +13,7 @@ public class Constants {
     public static String ROLE_TRAINEE_KEY = "ROLE.trainee";
 
     public static String CHECK_PRESENCE_ACTION = "br.com.ufc.danielfilho.presenceapp.checkpresence.ACTION";
+    public static String SERVICE_START_OBSERVING_ACTION = "presenceapp.com.br.ufc.danielfilho.SERVICE_START_OBSERVING_ACTION";
     public static String CHECK_EVERYDAY_KEY = "CHECK_EVERYDAY_KEY";
 
     public static String CHECK_PRESENCE_DURATION = "CHECK_PRESENCE_DURATION_KEY";

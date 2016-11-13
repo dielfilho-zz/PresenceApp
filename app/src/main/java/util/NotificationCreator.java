@@ -22,6 +22,7 @@ public class NotificationCreator {
                 .setContentTitle("PresenceApp")
                 .setContentText(message)
                 .setGroup("PresenceApp")
+                .setPriority(Notification.PRIORITY_MAX)
                 .setStyle(new NotificationCompat.BigTextStyle())
                 .setDefaults(Notification.DEFAULT_ALL);
 

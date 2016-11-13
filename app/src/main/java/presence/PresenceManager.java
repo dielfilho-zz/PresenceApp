@@ -63,8 +63,8 @@ public class PresenceManager {
                 int dayOfWeek = tempCalendar.get(Calendar.DAY_OF_WEEK) - 1;
 
                 while (dayOfWeek != day.getIdDay()) {
-                    tempCalendar.add(Calendar.DATE, 1);
                     dayOfWeek = tempCalendar.get(Calendar.DAY_OF_WEEK);
+                    tempCalendar.add(Calendar.DATE, 1);
                 }
 
                 for (CheckPresence cp : day.getCheckPresenceList()) {
@@ -73,24 +73,21 @@ public class PresenceManager {
                         try {
                             calendarHours.setTime(format.parse(cp.getTimeInit()));
 
-                            tempCalendar.set(Calendar.HOUR, calendarHours.get(Calendar.HOUR));
+                            tempCalendar.set(Calendar.HOUR_OF_DAY, calendarHours.get(Calendar.HOUR_OF_DAY));
                             tempCalendar.set(Calendar.MINUTE, calendarHours.get(Calendar.MINUTE));
 
                             //Checking if the alarm is late
                             long diff = Calendar.getInstance().getTimeInMillis() - tempCalendar.getTimeInMillis();
-
                             if(diff > 0){
                                 tempCalendar.add(Calendar.DATE, 7);
                             }
 
                             Log.d("LOG","DATE CHECK PRESENCE ---------------: "+format1.format(tempCalendar.getTime()));
 
-                            Intent intent = new Intent(context, NetworkObserverService.class);
+                            Intent intent = new Intent(Constants.SERVICE_START_OBSERVING_ACTION);
 
                             List<String> wiFiDatas = new ArrayList<>();
                             wiFiDatas.add(team.getMacAP());
-
-                            Log.d("LOG", "DATAS: -------------------> "+wiFiDatas.size());
 
                             intent.putExtra(PredectConstants.WIFI_BUNDLE, networkManager.createWiFiBundle(wiFiDatas, cp.getDuration(), team.getDistance()));
 
@@ -101,7 +98,7 @@ public class PresenceManager {
                     }
                 }
 
-                tempCalendar = Calendar.getInstance();
+                tempCalendar.setTimeInMillis(System.currentTimeMillis());
             }
         }
 
@@ -116,7 +113,7 @@ public class PresenceManager {
         RealmResults<PresencePendingIntent> listPendings = realm.where(PresencePendingIntent.class).findAll();
         Intent intent = new Intent(context, NetworkObserverService.class);
         for(PresencePendingIntent presenceIntent : listPendings){
-            PendingIntent pendingIntent = PendingIntent.getService(context, (int) presenceIntent.getId(), intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) presenceIntent.getId(), intent, 0);
             alarmManager.cancel(pendingIntent);
             Log.d("LOG", "CANCELLING ALL ALARMS CHECKS.....");
         }
@@ -134,7 +131,7 @@ public class PresenceManager {
 
         realm.copyToRealm(presencePendingIntent);
 
-        PendingIntent pendingIntent = PendingIntent.getService(context, nextId, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, nextId, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Log.d("LOG", "Setting the alarm");
