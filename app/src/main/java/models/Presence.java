@@ -3,11 +3,13 @@ package models;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Daniel Filho on 10/30/16.
  */
 
-public class Presence {
+public class Presence{
     private String id;
     private String idTrainee;
     private String idTeam;

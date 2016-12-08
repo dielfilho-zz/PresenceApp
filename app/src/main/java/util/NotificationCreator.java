@@ -2,7 +2,9 @@ package util;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
 
@@ -16,7 +18,7 @@ import presenceapp.com.br.ufc.danielfilho.presenceapp.R;
 
 public class NotificationCreator {
 
-    public static void create(Context context, String message, int icon){
+    public static void create(Context context, String message, int icon) {
         NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                 .setSmallIcon(icon)
                 .setContentTitle("PresenceApp")

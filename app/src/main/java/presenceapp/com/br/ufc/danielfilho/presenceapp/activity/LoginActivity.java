@@ -99,9 +99,6 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
                 user.setName(r.get("name").toString());
                 user.setRole(role);
 
-                Toast.makeText(this, "Seja Bem Vindo!", Toast.LENGTH_LONG).show();
-                callMainActivity();
-
                 preferences.putString(Constants.USER_ID_KEY, user.getId());
                 preferences.putString(Constants.USER_NAME, user.getName());
 
@@ -109,6 +106,8 @@ public class LoginActivity extends AppCompatActivity implements ServerResponseLi
 
                 preferences.putBoolean(Constants.USER_KEEP_LOGGED, true);
 
+                //                Toast.makeText(this, "Seja Bem Vindo!", Toast.LENGTH_LONG).show();
+                callMainActivity();
 
             }else{
                 Toast.makeText(this, "Usuário e/ou Senha Inválidos", Toast.LENGTH_LONG).show();

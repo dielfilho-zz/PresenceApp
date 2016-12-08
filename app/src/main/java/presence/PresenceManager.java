@@ -84,7 +84,7 @@ public class PresenceManager {
 
                             Log.d("LOG","DATE CHECK PRESENCE ---------------: "+format1.format(tempCalendar.getTime()));
 
-                            Intent intent = new Intent(Constants.SERVICE_START_OBSERVING_ACTION);
+                            Intent intent = new Intent(PredectConstants.ACTION_SERVICE_WAKEFUL_BROADCAST);
 
                             List<String> wiFiDatas = new ArrayList<>();
                             wiFiDatas.add(team.getMacAP());
@@ -136,7 +136,7 @@ public class PresenceManager {
 
         Log.d("LOG", "Setting the alarm");
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis,AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
 
     }
 
